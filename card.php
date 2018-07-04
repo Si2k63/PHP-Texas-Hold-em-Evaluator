@@ -40,12 +40,7 @@ class card
             return false;
         }
     }
-
-    public function getId()
-    {
-        return self::$ranks[$this->rank] * self::$suits[$this->suit];
-    }
-
+    
     public function getRank()
     {
         return $this->rank;
@@ -57,9 +52,9 @@ class card
     }
 
 
-    public function display()
+    public function toString()
     {
-        echo $this->rank . $this->suit . PHP_EOL;
+        return $this->rank . $this->suit;
     }
 
     public static function getRanks()
@@ -80,7 +75,31 @@ class card
     public static function isValidRank($rank)
     {
         return array_key_exists($rank, self::$ranks);
-    }    
+    }  
+    
+    public static function getSuitValue($suit)
+    {
+        if (self::isValidSuit($suit))
+        {
+            return self::$suits[$suit];
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static function getRankValue($rank)
+    {
+        if (self::isValidRank($rank))
+        {
+            return self::$ranks[$rank];
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 ?>
