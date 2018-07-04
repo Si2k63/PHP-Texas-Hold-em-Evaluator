@@ -2,18 +2,18 @@
 
 class deck
 {
-    private static $suits = array('c','h','d','s');
-    private static $ranks = array('2','3','4','5','6','7','8','9','T','J','Q','K','A');
     private $cards = array();
 
     public function __construct()
     {
-        for ($i = 0; $i < count(self::$suits); $i++)
+        $suits = card::getSuits();
+        $ranks = card::getRanks();
+
+        for ($i = 0; $i < count($suits); $i++)
         {
-            for ($k = 0; $k < count(self::$ranks); $k++)
+            for ($k = 0; $k < count($ranks); $k++)
             {
-                $card = new card(self::$ranks[$k], self::$suits[$i]);
-                $card->display();
+                $card = new card($ranks[$k], $suits[$i]);
                 $this->cards[]=$card;
             }
         }
@@ -45,17 +45,6 @@ class deck
     {
         return in_array($card, $this->cards);
     }
-
-    public static function isValidSuit($suit)
-    {
-        return in_array($suit, self::$suits);
-    }
-
-    public static function isValidRank($rank)
-    {
-        return in_array($rank, self::$ranks);
-    }
-
 }
 
 ?>

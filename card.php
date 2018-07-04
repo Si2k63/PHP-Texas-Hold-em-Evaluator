@@ -5,7 +5,7 @@ class card
     private $rank;
     private $suit;
 
-    private static $rankPrimes = array(
+    private static $ranks = array(
         '2' => 2,
         '3' => 3,
         '4' => 5,
@@ -21,7 +21,7 @@ class card
         'A' => 37,
     );
 
-    private static $suitPrimes = array(
+    private static $suits = array(
         'c' => 41,
         'h' => 43,
         'd' => 47,
@@ -30,7 +30,7 @@ class card
 
     public function __construct($rank, $suit)
     {
-        if (deck::isValidRank($rank) && deck::isValidSuit($suit))
+        if (self::isValidRank($rank) && self::isValidSuit($suit))
         {
             $this->rank = $rank;
             $this->suit = $suit;
@@ -43,7 +43,7 @@ class card
 
     public function getId()
     {
-        return $rankPrimes[$this->rank] * $suitPrimes[$suit];
+        return self::$ranks[$this->rank] * self::$suits[$this->suit];
     }
 
     public function getRank()
@@ -61,6 +61,26 @@ class card
     {
         echo $this->rank . $this->suit . PHP_EOL;
     }
+
+    public static function getRanks()
+    {
+        return array_keys(self::$ranks);
+    }
+
+    public static function getSuits()
+    {
+        return array_keys(self::$suits);  
+    }
+
+    public static function isValidSuit($suit)
+    {
+        return array_key_exists($suit, self::$suits);
+    }
+
+    public static function isValidRank($rank)
+    {
+        return array_key_exists($rank, self::$ranks);
+    }    
 }
 
 ?>
