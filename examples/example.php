@@ -23,29 +23,31 @@ $playerTwo[]=$deck->draw();
 $playerTwo[]=$deck->draw();
 $playerTwo[]=$deck->draw();
 
-
 // determine the strength of both hands
 $evaluate = new evaluate();
-$playerOneRank = $evaluate->getValue($playerOne);
-$playerTwoRank = $evaluate->getValue($playerTwo);
 
+$playerOneRank = $evaluate->getValue($playerOne);
+$playerOneHand = $evaluate->getHandName();
+
+$playerTwoRank = $evaluate->getValue($playerTwo);
+$playerTwoHand = $evaluate->getHandName();
 
 // display the winner
 if ($playerOneRank < $playerTwoRank)
 {
-    echo "Player one is the winner with: " .  $evaluate->getHandName($playerOneRank) . PHP_EOL;
-    echo "Player two is the loser with: " .  $evaluate->getHandName($playerTwoRank) . PHP_EOL;   
+    echo "Player one is the winner with: $playerOneHand" . PHP_EOL;
+    echo "Player two is the loser with: $playerTwoHand" . PHP_EOL;   
 }
 else
 {
     if ($playerOneRank == $playerTwoRank)
     {
-        echo "It's a tie! Both players have: " . $evaluate->getHandName($playerOneRank) . PHP_EOL;
+        echo "It's a tie! Both players have: $playerOneHand" . PHP_EOL;
     }
     else
     {
-        echo "Player two is the winner with a: " .  $evaluate->getHandName($playerTwoRank) . PHP_EOL;
-        echo "Player one is the loser with a: " .  $evaluate->getHandName($playerOneRank) . PHP_EOL;
+        echo "Player two is the winner with: $playerTwoHand" . PHP_EOL;
+        echo "Player one is the loser with: $playerOneHand" . PHP_EOL;   
      }
 }
 

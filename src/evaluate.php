@@ -3,6 +3,7 @@
 class evaluate
 {
     var $rankings = array();
+    var $lastResult = "";
 
     function __construct()
     {
@@ -99,7 +100,7 @@ class evaluate
                             if ($a - 4 != $e)
                             {
                                 $value = card::getRankValue($ranks[$a]) * card::getRankValue($ranks[$b]) * card::getRankValue($ranks[$c]) * card::getRankValue($ranks[$d]) * card::getRankValue($ranks[$e]);
-
+                                
                                 if ($value != 7770) // filter the awkward A5432 combination
                                 {
                                     if ($suited) $value *= 59; // multiplied by next prime number in the sequence to distinguish from non-suited 5 card combinations.
@@ -197,6 +198,7 @@ class evaluate
             
             if ($rank !== false)
             {
+
                 if (in_array($suitValue, $suits)) 
                 {
                     $rankValue *= 59;
@@ -208,7 +210,6 @@ class evaluate
                         $rank = $temp;
                     }
                 }
-
                 return $rank + 1;
             }
             else
@@ -251,6 +252,7 @@ class evaluate
                                 if ($rank < $highest) // lowest rank is best, 1 = Royal Flush.
                                 {
                                     $highest = $rank;
+                                    $this->lastResult = $this->calculateHandName($rank, $currentHand);
                                 }
                             }
                         }
@@ -258,82 +260,82 @@ class evaluate
                 }
             }
 
+
             return $highest;
         }
 
     }
 
-    function getHandName($rank)
+    static function sortCardsByRanks($cards) 
+    {
+        usort($cards, function($a, $b) use ($cards)
+        {
+            $aFreq = count(array_filter( $cards, function($object) use ($a) { return $object->getRank() == $a->getRank(); }));
+            $bFreq = count(array_filter( $cards, function($object) use ($b) { return $object->getRank() == $b->getRank(); }));
+
+            if ($aFreq < $bFreq )
+            {
+                return $aFreq < $bFreq;
+            }
+            else
+            {
+                return $a->getRankValue($a->getRank()) < $b->getRankValue($b->getRank());
+            }
+        });
+
+        return $cards;
+    }
+
+    function getHandName()
+    {
+        return $this->lastResult;
+    }
+
+    private function calculateHandName($rank, $cards)
     {
         $name = "";
+        $cards = self::sortCardsByRanks($cards);
 
-        if ($rank >= 1 && $rank <= 10)
+        if ($rank == 1)
         {
-            switch ($rank)
-            {
-                case 1:
-                    $name = "Royal Flush";
-                    break;
-                case 2:
-                    $name = "King High Straight Flush";
-                    break;
-                case 3:
-                    $name = "Queen High Straight Flush";
-                    break;
-                case 4:
-                    $name = "Jack High Straight Flush";
-                    break;
-                case 5:
-                    $name = "Ten High Straight Flush";
-                    break;
-                case 6:
-                    $name = "Nine High Straight Flush";
-                    break;
-                case 7:
-                    $name = "Eight High Straight Flush";
-                    break;
-                case 8:
-                    $name = "Seven High Straight Flush";
-                    break;
-                case 9:
-                    $name = "Six High Straight Flush";
-                    break;
-                case 10:
-                    $name = "Five High Straight Flush";
-                    break;
-            }
+            $name = "Royal Flush";
+        }
+        else if ($rank >= 2 && $rank <= 10)
+        {
+            $name = "Straight Flush, " . $cards[0]->getRankName() . " high";
+        
         }
         else if ($rank >= 11 && $rank <= 166)
         {
-            $name = "Four of a Kind";
+            $name = "Four of a Kind, " . $cards[0]->getRankName() . "s with a " . $cards[4]->getRankName() . " kicker.";
         }
         else if ($rank >= 167 && $rank <= 322)
         {
-            $name = "Full House";
+            $name = "Full House, " . $cards[0]->getRankName() . "s full of " . $cards[4]->getRankName() . "s.";
         }
         else if ($rank >= 323 && $rank <= 1599)
         {
-            $name = "Flush";
+            $name = "Flush, " . $cards[0]->getRankName() . " high.";
         }
         else if ($rank >= 1600 && $rank <= 1609)
         {
-            $name = "Straight";
+            $name = "Straight, " . $cards[0]->getRankName() . " high.";
         }
         else if ($rank >= 1610 && $rank <= 2467)
         {
-            $name = "Three of a Kind";
+            $name = "Three of a Kind, " . $cards[0]->getRankName() . "s with " . $cards[3]->getRankName() . " and " .  $cards[4]->getRankName() . " kickers.";
         }
         else if ($rank >= 2468 && $rank <= 3325)
         {
-            $name = "Two Pair";
+            $name = "Two pair, " . $cards[0]->getRankName() . "s and " . $cards[2]->getRankName() . "s with a " .  $cards[4]->getRankName() . " kicker.";
         }
         else if ($rank >= 3326 && $rank <= 6185)
         {
-            $name = "One Pair";
+            $name = "One Pair, " . $cards[0]->getRankName() . "s with " . $cards[2]->getRankName() . ", " . $cards[3]->getRankName() . ", " . $cards[4]->getRankName() . " kickers.";
         }
         else if ($rank >= 6186)
         {
-            $name = "High Card";
+            $name = $cards[0]->getRankName() . " high.";
         }
 
         return $name;
