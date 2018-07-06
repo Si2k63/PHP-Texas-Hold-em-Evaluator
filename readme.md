@@ -12,19 +12,19 @@ There are three main classes included in this project: card, deck and evaluate.
 This is a factory class that will generate, shuffle and deal a deck of 52 cards.
 
 
-####Instantiating the class:
+#### Instantiating the class:
 	$deck = new deck();
 
 
-####Shuffling the deck:
+#### Shuffling the deck:
 	$deck->shuffle();
 
 
-####Drawing a card:
+#### Drawing a card:
 	$card = $deck->draw();
 
 
-####Checking if a card is present in the deck:
+#### Checking if a card is present in the deck:
     if ($deck->contains(new card('A', 'd'))
 	{
 		echo "The Ad is in the deck.";
@@ -36,18 +36,18 @@ This is a factory class that will generate, shuffle and deal a deck of 52 cards.
 
 ### Card Class
 
-####Instantiating the class:
+#### Instantiating the class:
 	$card = new card('K', 'c');
 
-####Getting the full English name of the card:
+#### Getting the full English name of the card:
 	$card->getRankName();
 
 ### Evaluate Class
 
-####Instantiating the class:
+#### Instantiating the class:
 	$evaluate = new evaluate();
 
-####Determining the rank of a collection of five cards
+#### Determining the rank of a collection of five cards
 	$cards = array(
 		new card('A', 'd'),
 		new card('K', 'c'),
@@ -63,7 +63,7 @@ This is a factory class that will generate, shuffle and deal a deck of 52 cards.
 	echo "Rank: $rank" . PHP_EOL;
 	echo "Name: $name" . PHP_EOL;
 	
-####Comparing two hands:
+#### Comparing two hands:
 	$evaluate = new evaluate();
 
 	$hand1 = array(
