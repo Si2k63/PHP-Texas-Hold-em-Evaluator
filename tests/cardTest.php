@@ -120,6 +120,34 @@ class deckTest extends TestCase
         );
 
     }
+    public function testGetRankName()
+    {
+        $ranks = array(
+            '2' => "Two",
+            '3' => "Three",
+            '4' => "Four",
+            '5' => "Five",
+            '6' => "Six",
+            '7' => "Seven",
+            '8' => "Eight",
+            '9' => "Nine",
+            'T' => "Ten",
+            'J' => "Jack",
+            'Q' => "Queen",
+            'K' => "King",
+            'A' => "Ace",
+        );
+
+        foreach ($ranks as $key => $value)
+        {
+            $card = new Card($key, "d");
+
+            $this->assertEquals(
+                $value,
+                $card->getRankName()
+            );
+        }
+    }    
 }
 
 ?>

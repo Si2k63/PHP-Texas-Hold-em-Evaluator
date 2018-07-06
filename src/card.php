@@ -6,37 +6,20 @@ class card
     private $suit;
 
     private static $ranks = array(
-        '2' => 2,
-        '3' => 3,
-        '4' => 5,
-        '5' => 7,
-        '6' => 9,
-        '7' => 11,
-        '8' => 13,
-        '9' => 17,
-        'T' => 19,
-        'J' => 23,
-        'Q' => 29,
-        'K' => 31,
-        'A' => 37,
+        '2' => array('value' => 2, 'name' => 'Two'),
+        '3' => array('value' => 3, 'name' => 'Three'),
+        '4' => array('value' => 5, 'name' => 'Four'),
+        '5' => array('value' => 7, 'name' => 'Five'),
+        '6' => array('value' => 9, 'name' => 'Six'),
+        '7' => array('value' => 11, 'name' => 'Seven'),
+        '8' => array('value' => 13, 'name' => 'Eight'),
+        '9' => array('value' => 17, 'name' => 'Nine'),
+        'T' => array('value' => 19, 'name' => 'Ten'),
+        'J' => array('value' => 23, 'name' => 'Jack'),
+        'Q' => array('value' => 29, 'name' => 'Queen'),
+        'K' => array('value' => 31, 'name' => 'King'),
+        'A' => array('value' => 37, 'name' => 'Ace')
     );
-
-    private static $names = array(
-        '2' => 'Two',
-        '3' => 'Three',
-        '4' => 'Four',
-        '5' => 'Five',
-        '6' => 'Six',
-        '7' => 'Seven',
-        '8' => 'Eight',
-        '9' => 'Nine',
-        'T' => 'Ten',
-        'J' => 'Jack',
-        'Q' => 'Queen',
-        'K' => 'King',
-        'A' => 'Ace',
-    );
-
     private static $suits = array(
         'c' => 41,
         'h' => 43,
@@ -102,8 +85,7 @@ class card
     {
         if (self::isValidRank($rank))
         {
-            //echo "$rank ";
-            return self::$ranks[$rank];
+            return self::$ranks[$rank]["value"];
         }
         else
         {
@@ -113,7 +95,7 @@ class card
 
     public function getRankName()
     {
-        return self::$names[$this->rank];
+        return self::$ranks[$this->rank]["name"];
     }
 }
 

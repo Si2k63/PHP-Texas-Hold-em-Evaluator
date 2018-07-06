@@ -229,7 +229,7 @@ class evaluate
         else
         {
             $count = 0;
-            $highest = count($this->rankings);
+            $highest = count($this->rankings) + 1;
 
             for ($a = count($cards) - 1; $a >= 0; $a--)
             {
@@ -270,12 +270,14 @@ class evaluate
     {
         usort($cards, function($a, $b) use ($cards)
         {
-            $aFreq = count(array_filter( $cards, function($object) use ($a) { return $object->getRank() == $a->getRank(); }));
+            $aFreq = count(array_filter( $cards, function($object) use ($a) { return $object->getRank() == $a->getRank(); })); // count how many cards of that rank exist in the array
             $bFreq = count(array_filter( $cards, function($object) use ($b) { return $object->getRank() == $b->getRank(); }));
 
-            if ($aFreq < $bFreq )
+            //echo "aFreq: " .$a->getRank(). " - $aFreq, bFreq: " .$b->getRank(). " - $bFreq" . PHP_EOL;
+
+            if ($bFreq > $aFreq || $aFreq > $bFreq)
             {
-                return $aFreq < $bFreq;
+                return $bFreq > $aFreq;
             }
             else
             {
@@ -296,13 +298,19 @@ class evaluate
         $name = "";
         $cards = self::sortCardsByRanks($cards);
 
+        if (in_array($rank, array(10, 1609))) // When it's A5432, we need to bump the ace to the end of the array.
+        {
+            $card = array_shift($cards);
+            $cards[]=$card;
+        }
+
         if ($rank == 1)
         {
-            $name = "Royal Flush";
+            $name = "Royal Flush.";
         }
         else if ($rank >= 2 && $rank <= 10)
         {
-            $name = "Straight Flush, " . $cards[0]->getRankName() . " high";
+            $name = "Straight Flush, " . $cards[0]->getRankName() . " high.";
         
         }
         else if ($rank >= 11 && $rank <= 166)
@@ -315,11 +323,11 @@ class evaluate
         }
         else if ($rank >= 323 && $rank <= 1599)
         {
-            $name = "Flush, " . $cards[0]->getRankName() . " high.";
+            $name = "Flush, " . $cards[0]->getRankName() . " high - " . $cards[0]->getRankName() . ", " . $cards[1]->getRankName() . ", " . $cards[2]->getRankName() . ", " . $cards[3]->getRankName() . ", " . $cards[4]->getRankName() . ".";
         }
         else if ($rank >= 1600 && $rank <= 1609)
         {
-            $name = "Straight, " . $cards[0]->getRankName() . " high.";
+            $name = "Straight, " . $cards[0]->getRankName() . " high - " . $cards[0]->getRankName() . ", " . $cards[1]->getRankName() . ", " . $cards[2]->getRankName() . ", " . $cards[3]->getRankName() . ", " . $cards[4]->getRankName() . ".";
         }
         else if ($rank >= 1610 && $rank <= 2467)
         {
@@ -335,7 +343,7 @@ class evaluate
         }
         else if ($rank >= 6186)
         {
-            $name = $cards[0]->getRankName() . " high.";
+            $name = $cards[0]->getRankName() . " high - " . $cards[0]->getRankName() . ", " . $cards[1]->getRankName() . ", " . $cards[2]->getRankName() . ", " . $cards[3]->getRankName() . ", " . $cards[4]->getRankName() . ".";
         }
 
         return $name;

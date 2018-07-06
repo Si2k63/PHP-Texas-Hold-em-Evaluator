@@ -1,6 +1,11 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+/* 
+Note to self: 
+Add test cases for yesterday's modifications and add a readme.md file
+Make it into a composer package
+*/
 
 class evaluateTest extends TestCase
 {
@@ -11,6 +16,163 @@ class evaluateTest extends TestCase
     {
         $this->evaluate = new evaluate();
     }
+    
+    public function testGetHandName()
+    {
+        $cards = array(
+            new card("A", "d"),
+            new card("K", "d"),
+            new card("Q", "d"),
+            new card("J", "d"),
+            new card("T", "d")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "Royal Flush.",
+            $this->evaluate->getHandName()
+        );
+
+        // Test 5 high straight flush (special case where ace is low)
+        $cards = array(
+            new card("A", "d"),
+            new card("2", "d"),
+            new card("3", "d"),
+            new card("4", "d"),
+            new card("5", "d")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "Straight Flush, Five high.",
+            $this->evaluate->getHandName()
+        );
+
+        $cards = array(
+            new card("K", "d"),
+            new card("K", "c"),
+            new card("K", "h"),
+            new card("K", "s"),
+            new card("Q", "d")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "Four of a Kind, Kings with a Queen kicker.",
+            $this->evaluate->getHandName()
+        );
+
+        $cards = array(
+            new card("J", "d"),
+            new card("Q", "c"),
+            new card("J", "h"),
+            new card("Q", "s"),
+            new card("Q", "d")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "Full House, Queens full of Jacks.",
+            $this->evaluate->getHandName()
+        );
+
+        $cards = array(
+            new card("A", "h"),
+            new card("8", "h"),
+            new card("5", "h"),
+            new card("4", "h"),
+            new card("2", "h")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "Flush, Ace high - Ace, Eight, Five, Four, Two.",
+            $this->evaluate->getHandName()
+        );
+
+        $cards = array(
+            new card("J", "h"),
+            new card("8", "c"),
+            new card("9", "s"),
+            new card("T", "d"),
+            new card("7", "h")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "Straight, Jack high - Jack, Ten, Nine, Eight, Seven.",
+            $this->evaluate->getHandName()
+        );
+
+        // Test 5 high straight (special case where ace is low)
+        $cards = array(
+            new card("5", "h"),
+            new card("A", "c"),
+            new card("2", "s"),
+            new card("3", "d"),
+            new card("4", "h")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "Straight, Five high - Five, Four, Three, Two, Ace.",
+            $this->evaluate->getHandName()
+        );
+
+        $cards = array(
+            new card("5", "h"),
+            new card("5", "c"),
+            new card("5", "s"),
+            new card("8", "d"),
+            new card("A", "h")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "Three of a Kind, Fives with Ace and Eight kickers.",
+            $this->evaluate->getHandName()
+        );
+
+        $cards = array(
+            new card("A", "h"),
+            new card("5", "c"),
+            new card("A", "s"),
+            new card("J", "d"),
+            new card("5", "h")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "Two pair, Aces and Fives with a Jack kicker.",
+            $this->evaluate->getHandName()
+        );
+
+        $cards = array(
+            new card("A", "h"),
+            new card("3", "c"),
+            new card("2", "s"),
+            new card("A", "d"),
+            new card("5", "h")
+        );
+
+        $this->evaluate->getValue($cards);
+        
+        $this->assertEquals(
+            "One Pair, Aces with Five, Three, Two kickers.",
+            $this->evaluate->getHandName()
+        );
+
+    }
+
 
     public function testAllHands()
     {
@@ -44,11 +206,12 @@ class evaluateTest extends TestCase
                 $this->evaluate->getValue($cards)
             );
 
+            $this->assertNotEquals(
+                0,
+                strlen($this->evaluate->getHandName())
+            );
 
         }
-
-
-
     }
 
 }
