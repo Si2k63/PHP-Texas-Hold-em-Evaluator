@@ -1,12 +1,6 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-/* 
-Note to self: 
-Add test cases for yesterday's modifications and add a readme.md file
-Make it into a composer package
-*/
-
 class evaluateTest extends TestCase
 {
 
