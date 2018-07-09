@@ -1,6 +1,8 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+/* Fix tests, clean up code */
+
 class deckTest extends TestCase
 {
     public function testRankAndSuit()
@@ -39,32 +41,6 @@ class deckTest extends TestCase
         );
     }
 
-    public function testIsValidSuit()
-    {
-        $this->assertEquals(
-            false,
-            card::isValidSuit('e')
-        );
-
-        $this->assertEquals(
-            true,
-            card::isValidSuit('d')
-        );
-    }
-
-    public function testIsValidRank()
-    {
-        $this->assertEquals(
-            false,
-            card::isValidRank('B')
-        );
-
-        $this->assertEquals(
-            true,
-            card::isValidRank('Q')
-        );
-    }
-
     public function testGetRankValue()
     {
         $ranks = array(
@@ -85,16 +61,12 @@ class deckTest extends TestCase
 
         foreach ($ranks as $key => $value)
         {
+            $card = new card($key, "d");
             $this->assertEquals(
                 $value,
-                card::getRankValue($key)
+                $card->getRankValue()
             );
         }
-
-        $this->assertEquals(
-            false,
-            card::getRankValue("B")
-        );
     }
 
     public function testGetSuitValue()
@@ -108,18 +80,33 @@ class deckTest extends TestCase
 
         foreach ($suits as $key => $value)
         {
+            $card = new Card("A", $key);
             $this->assertEquals(
                 $value,
-                card::getSuitValue($key)
+                $card->getSuitValue()
             );
         }
+    }
 
-        $this->assertEquals(
-            false,
-            card::getSuitValue("b")
+    public function testGetSuitName()
+    {
+        $suits = array(
+            'c' => 'Clubs',
+            'h' => 'Hearts',
+            'd' => 'Diamonds',
+            's' => 'Spades'
         );
 
+        foreach ($suits as $key => $value)
+        {
+            $card = new Card("A", $key);
+            $this->assertEquals(
+                $value,
+                $card->getSuitName()
+            );
+        }
     }
+
     public function testGetRankName()
     {
         $ranks = array(
@@ -141,7 +128,6 @@ class deckTest extends TestCase
         foreach ($ranks as $key => $value)
         {
             $card = new Card($key, "d");
-
             $this->assertEquals(
                 $value,
                 $card->getRankName()

@@ -3,6 +3,11 @@
 $time_start = microtime(true);
 require "../vendor/autoload.php";
 
+/* Hand Example:
+Deal two players a random hand each and compare them to determine the winner.
+*/
+
+
 // create a deck and shuffle it
 $deck = new deck();
 $deck->shuffle();
@@ -27,10 +32,10 @@ $playerTwo[]=$deck->draw();
 $evaluate = new evaluate();
 
 $playerOneRank = $evaluate->getValue($playerOne);
-$playerOneHand = $evaluate->getHandName();
+$playerOneHand = $evaluate->getHandName($playerOneRank, $playerOne);
 
 $playerTwoRank = $evaluate->getValue($playerTwo);
-$playerTwoHand = $evaluate->getHandName();
+$playerTwoHand = $evaluate->getHandName($playerTwoRank, $playerTwo);
 
 // display the winner
 if ($playerOneRank < $playerTwoRank)

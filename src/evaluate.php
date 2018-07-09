@@ -3,10 +3,27 @@
 class evaluate
 {
     var $rankings = array();
-    var $lastResult = "";
+    var $done = 1;
+    var $cards = array();
 
     function __construct()
     {
+        $this->cards = array(
+            new card('2','d'),
+            new card('3','d'),
+            new card('4','d'),
+            new card('5','d'),
+            new card('6','d'),
+            new card('7','d'),
+            new card('8','d'),
+            new card('9','d'),
+            new card('T','d'),
+            new card('J','d'),
+            new card('Q','d'),
+            new card('K','d'),
+            new card('A','d')      
+        );
+
         $this->straights(true);
         $this->quads();
         $this->fullhouses();
@@ -20,8 +37,6 @@ class evaluate
 
     function pairs()
     {
-        $ranks = card::getRanks();
-
         for ($a = 12; $a >= 0; $a--)
         {
             for ($b = 12; $b >= 0; $b--)
@@ -32,8 +47,15 @@ class evaluate
                     {
                         if ($a != $b && $a != $c && $a != $d && $b != $c && $b != $d && $c != $d)
                         {
-                            $value = card::getRankValue($ranks[$a]) * card::getRankValue($ranks[$a]) * card::getRankValue($ranks[$b]) * card::getRankValue($ranks[$c])* card::getRankValue($ranks[$d]);;
-                            $this->rankings[]=$value;
+                            $this->addRanking(
+                                array(
+                                    $this->cards[$a],
+                                    $this->cards[$a],
+                                    $this->cards[$b],
+                                    $this->cards[$c],
+                                    $this->cards[$d]
+                                )
+                            );
                         }
                     }
 
@@ -43,10 +65,23 @@ class evaluate
 
     }
 
+    function addRanking($cards, $suited=false)
+    {
+        $value = 1;
+
+        foreach ($cards as $card)
+        {
+            $value *= $card->getRankValue();    
+        }
+
+        if ($suited) $value *= 59;
+
+        $this->rankings[$value]=$this->done;
+        $this->done++;
+    }
+
     function twopairs()
     {
-        $ranks = card::getRanks();
-
         for ($a = 12; $a >= 0; $a--)
         {
             for ($b = $a - 1; $b >= 0; $b--)
@@ -55,8 +90,15 @@ class evaluate
                 {
                     if ($a != $b && $a != $c && $b != $c)
                     {
-                        $value = card::getRankValue($ranks[$a]) * card::getRankValue($ranks[$a]) * card::getRankValue($ranks[$b]) * card::getRankValue($ranks[$b]) * card::getRankValue($ranks[$c]);
-                        $this->rankings[]=$value;
+                        $this->addRanking(
+                            array(
+                                $this->cards[$a],
+                                $this->cards[$a],
+                                $this->cards[$b],
+                                $this->cards[$b],
+                                $this->cards[$c]
+                            )
+                        );
                     }
                 }
             }
@@ -65,8 +107,6 @@ class evaluate
 
     function trips()
     {
-        $ranks = card::getRanks();
-
         for ($a = 12; $a >= 0; $a--)
         {
             for ($b = 12; $b >= 0; $b--)
@@ -75,8 +115,15 @@ class evaluate
                 {
                     if ($a != $b && $a != $c)
                     {
-                        $value = card::getRankValue($ranks[$a]) * card::getRankValue($ranks[$a]) * card::getRankValue($ranks[$a]) * card::getRankValue($ranks[$b]) * card::getRankValue($ranks[$c]);
-                        $this->rankings[]=$value;
+                        $this->addRanking(
+                            array(
+                                $this->cards[$a],
+                                $this->cards[$a],
+                                $this->cards[$a],
+                                $this->cards[$b],
+                                $this->cards[$c]
+                            )
+                        );
                     }
                 }
             }
@@ -85,8 +132,6 @@ class evaluate
 
     function flushes($suited=false)
     {
-        $ranks = card::getRanks();
-
         for ($a = 12; $a >= 0; $a--)
         {
             for ($b = $a - 1; $b >= 0; $b--)
@@ -99,12 +144,17 @@ class evaluate
                         {
                             if ($a - 4 != $e)
                             {
-                                $value = card::getRankValue($ranks[$a]) * card::getRankValue($ranks[$b]) * card::getRankValue($ranks[$c]) * card::getRankValue($ranks[$d]) * card::getRankValue($ranks[$e]);
+                                $cards = array(
+                                    $this->cards[$a],
+                                    $this->cards[$b],
+                                    $this->cards[$c],
+                                    $this->cards[$d],
+                                    $this->cards[$e]
+                                );
                                 
-                                if ($value != 7770) // filter the awkward A5432 combination
+                                if ($cards[0]->getRankValue() * $cards[1]->getRankValue() * $cards[2]->getRankValue() * $cards[3]->getRankValue() * $cards[4]->getRankValue()  != 7770) // filter the awkward A5432 combination
                                 {
-                                    if ($suited) $value *= 59; // multiplied by next prime number in the sequence to distinguish from non-suited 5 card combinations.
-                                    $this->rankings[]=$value;
+                                    $this->addRanking($cards, $suited);
                                 }                            
                             }
                         }
@@ -116,16 +166,21 @@ class evaluate
 
     function fullhouses()
     {
-        $ranks = card::getRanks();
-
         for ($i = 12; $i >= 0; $i--)
         {
             for ($k = 12; $k >= 0; $k--)
             {
                 if ($k != $i)
                 {
-                    $value = card::getRankValue($ranks[$i]) * card::getRankValue($ranks[$i]) * card::getRankValue($ranks[$i]) * card::getRankValue($ranks[$k]) * card::getRankValue($ranks[$k]);
-                    $this->rankings[]=$value;
+                    $this->addRanking(
+                        array(
+                            $this->cards[$i],
+                            $this->cards[$i],
+                            $this->cards[$i],
+                            $this->cards[$k],
+                            $this->cards[$k]
+                        )
+                    );
                 }
             }
         }
@@ -133,91 +188,76 @@ class evaluate
 
     function quads()
     {
-        $ranks = card::getRanks();
-
         for ($i = 12; $i >= 0; $i--)
         {
             for ($k = 12; $k >= 0; $k--)
             {
                 if ($k != $i)
                 {
-                    $value = card::getRankValue($ranks[$i]) * card::getRankValue($ranks[$i]) * card::getRankValue($ranks[$i]) * card::getRankValue($ranks[$i]) * card::getRankValue($ranks[$k]);
-                    $this->rankings[]=$value;
+                    $this->addRanking(
+                        array(
+                            $this->cards[$i],
+                            $this->cards[$i],
+                            $this->cards[$i],
+                            $this->cards[$i],
+                            $this->cards[$k]
+                        )     
+                    );
+
                 }
             }
         }
     }
 
     function straights($suited=false)
-    {
-        $ranks = card::getRanks();
-        
+    {        
         for ($i = 12; $i > 2; $i--)
-        {
-            $value = card::getRankValue($ranks[$i]) * card::getRankValue($ranks[$i-1]) * card::getRankValue($ranks[$i-2]) * card::getRankValue($ranks[$i-3]);
+        {            
+            $cards = array(
+                $this->cards[$i],
+                $this->cards[$i-1],
+                $this->cards[$i-2],
+                $this->cards[$i-3]
+            );
 
             if ($i > 3)
             {
-                $value *= card::getRankValue($ranks[$i-4]);
+                $cards[]=$this->cards[$i-4];
             }
             else
             {
-                $value *= card::getRankValue('A');
+                $cards[]=new card('A','d');
             }
 
-            if ($suited) $value *= 59;
-            $this->rankings[]=$value;
+            $this->addRanking($cards, $suited);
         }
     }
 
     private function getValueOfFive($cards)
     {
-        if (count($cards) != 5)
+        $rankValue = 1;
+        $suitValue = 1;
+
+        for ($i = 0; $i < 5; $i++)
         {
-            return false;
+            $rankValue *= $cards[$i]->getRankValue();
+            $suitValue *= $cards[$i]->getSuitValue();
         }
-        else
+
+        $rank = $this->rankings[$rankValue];
+        
+        if ($suitValue === 115856201 || $suitValue === 147008443 || $suitValue === 229345007 || $suitValue === 418195493) // check if all five cards are the same suit
         {
-            $rankValue = card::getRankValue($cards[0]->getRank());
-            $suitValue = card::getSuitValue($cards[0]->getSuit());
-
-            for ($i = 1; $i < 5; $i++)
-            {
-                $rankValue *= card::getRankValue($cards[$i]->getRank());
-                $suitValue *= card::getSuitValue($cards[$i]->getSuit());                
-            }
-
-            $suits = array(
-                115856201,  // clubs
-                147008443,  // hearts
-                229345007,  // diamonds
-                418195493   // spades
-            );
-
-            $rank = array_search($rankValue, $this->rankings, true);            
+            $rankValue *= 59;
+            $temp = $this->rankings[$rankValue];
             
-            if ($rank !== false)
+            if ($temp < $rank)
             {
-
-                if (in_array($suitValue, $suits)) 
-                {
-                    $rankValue *= 59;
-
-                    $temp = array_search($rankValue, $this->rankings, true); 
-                    
-                    if ($temp !== false && $temp < $rank)
-                    {
-                        $rank = $temp;
-                    }
-                }
-                return $rank + 1;
+                $rank = $temp;
             }
-            else
-            {
-                return false;
-            }
-
         }
+
+        return $rank;
     }
 
     function getValue($cards)
@@ -241,25 +281,25 @@ class evaluate
                         {
                             for ($e = $d - 1; $e >= 0; $e--)
                             {
-                                $currentHand = array();
-                                $currentHand[]=$cards[$a];
-                                $currentHand[]=$cards[$b];
-                                $currentHand[]=$cards[$c];
-                                $currentHand[]=$cards[$d];
-                                $currentHand[]=$cards[$e];
+                                $currentHand = array(
+                                    $cards[$a],
+                                    $cards[$b],
+                                    $cards[$c],
+                                    $cards[$d],
+                                    $cards[$e]
+                                );
+
                                 $rank = $this->getValueOfFive($currentHand);
 
                                 if ($rank < $highest) // lowest rank is best, 1 = Royal Flush.
                                 {
                                     $highest = $rank;
-                                    $this->lastResult = $this->calculateHandName($rank, $currentHand);
                                 }
                             }
                         }
                     }
                 }
             }
-
 
             return $highest;
         }
@@ -288,12 +328,7 @@ class evaluate
         return $cards;
     }
 
-    function getHandName()
-    {
-        return $this->lastResult;
-    }
-
-    private function calculateHandName($rank, $cards)
+    public function getHandName($rank, $cards)
     {
         $name = "";
         $cards = self::sortCardsByRanks($cards);

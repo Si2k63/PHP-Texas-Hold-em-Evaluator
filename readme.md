@@ -23,6 +23,8 @@ This is a factory class that will generate, shuffle and deal a deck of 52 cards.
 #### Drawing a card:
 	$card = $deck->draw();
 
+#### Drawing a specific card
+	$card = $deck->card("A", "d");
 
 #### Checking if a card is present in the deck:
     if ($deck->contains(new card('A', 'd'))
@@ -36,9 +38,6 @@ This is a factory class that will generate, shuffle and deal a deck of 52 cards.
 
 ### Card Class
 
-#### Instantiating the class:
-	$card = new card('K', 'c');
-
 #### Getting the full English name of the card:
 	$card->getRankName();
 
@@ -48,38 +47,41 @@ This is a factory class that will generate, shuffle and deal a deck of 52 cards.
 	$evaluate = new evaluate();
 
 #### Determining the rank of a collection of five cards
+	$deck = new deck();
+
 	$cards = array(
-		new card('A', 'd'),
-		new card('K', 'c'),
-		new card('K', 's'),
-		new card('A', 'h'),
-		new card('A', 'c')
+		$deck->card('A', 'd'),
+		$deck->card('K', 'c'),
+		$deck->card('K', 's'),
+		$deck->card('A', 'h'),
+		$deck->card('A', 'c')
 	);
  
 	$evaluate = new evaluate();
 	$rank = $evaluate->getValue($cards);
-	$name = $evaluate->getHandName();
+	$name = $evaluate->getHandName($cards, $rank);
 
 	echo "Rank: $rank" . PHP_EOL;
 	echo "Name: $name" . PHP_EOL;
 	
 #### Comparing two hands:
 	$evaluate = new evaluate();
+	$deck = new deck();
 
 	$hand1 = array(
-		new card('A', 'd'),
-		new card('K', 'c'),
-		new card('K', 's'),
-		new card('A', 'h'),
-		new card('A', 'c')
+		$deck->card('A', 'd'),
+		$deck->card('K', 'c'),
+		$deck->card('K', 's'),
+		$deck->card('A', 'h'),
+		$deck->card('A', 'c')
 	);
 
 	$hand2 = array(
-		new card('A', 'd'),
-		new card('Q', 'c'),
-		new card('J', 's'),
-		new card('T', 'h'),
-		new card('K', 'c')
+		$deck->card('A', 'd'),
+		$deck->card('Q', 'c'),
+		$deck->card('J', 's'),
+		$deck->card('T', 'h'),
+		$deck->card('K', 'c')
 	);
 
 	$evaluate = new evaluate();
@@ -105,7 +107,7 @@ This is a factory class that will generate, shuffle and deal a deck of 52 cards.
 
 ## Requirements
 
-PHP 5.3.0 or greater is required for the use of these libraries, due to the inclusion of the "use" identifier in usort callbacks in the evaluation class. 
+PHP 5.3.0 or greater is required for the use of these libraries, due to the inclusion of the "use" identifier in usort callbacks in the evaluation class. Due to array optimisations made in PHP 7, this class does perform faster on PHP 7 by upto about 50%. 
 
 PHPUnit required for running tests (included in repository).
 

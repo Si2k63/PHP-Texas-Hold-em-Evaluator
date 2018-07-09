@@ -50,19 +50,37 @@ class deckTest extends TestCase
         );
     }
 
-    public function testEmptyShuffle()
+    public function testDrawSpecificNumber()
     {
         $deck = new deck();
 
-        for ($i = 0; $i < 52; $i++)
-        {
-            $deck->draw();
-        }
+        $this->assertEquals(
+            7,
+            count($deck->draw(7))
+        );    
+    }
+
+    public function testEmptyShuffle()
+    {
+        $deck = new deck();
+        $deck->draw(52);
 
         $this->assertEquals(
             false,
             $deck->shuffle()
         );
+    }
+
+    public function testDrawSpecificCard()
+    {
+        $deck = new deck();
+        $card = new card("A", "d");
+
+        $this->assertEquals(
+            $card,
+            $deck->card("A", "d")
+        );
+
     }
 
     public function testShuffle()

@@ -3,8 +3,13 @@
 class card
 {
     private $rank;
-    private $suit;
+    private $rankName;
+    private $rankValue;
 
+    private $suit;
+    private $suitName;
+    private $suitValue;
+    
     private static $ranks = array(
         '2' => array('value' => 2, 'name' => 'Two'),
         '3' => array('value' => 3, 'name' => 'Three'),
@@ -21,16 +26,21 @@ class card
         'A' => array('value' => 37, 'name' => 'Ace')
     );
     private static $suits = array(
-        'c' => 41,
-        'h' => 43,
-        'd' => 47,
-        's' => 53
+        'c' => array('value' => 41, 'name' => 'Clubs'),
+        'h' => array('value' => 43, 'name' => 'Hearts'),
+        'd' => array('value' => 47, 'name' => 'Diamonds'),
+        's' => array('value' => 53, 'name' => 'Spades')
     );
 
     public function __construct($rank, $suit)
     {
         $this->rank = $rank;
+        $this->rankValue = self::$ranks[$rank]["value"];
+        $this->rankName = self::$ranks[$rank]["name"];
+
         $this->suit = $suit;
+        $this->suitValue = self::$suits[$suit]["value"];
+        $this->suitName = self::$suits[$suit]["name"];
     }
     
     public function getRank()
@@ -42,7 +52,6 @@ class card
     {
         return $this->suit;
     }
-
 
     public function toString()
     {
@@ -59,43 +68,24 @@ class card
         return array_keys(self::$suits);  
     }
 
-    public static function isValidSuit($suit)
+    public function getSuitName()
     {
-        return array_key_exists($suit, self::$suits);
+        return $this->suitName;
     }
 
-    public static function isValidRank($rank)
+    public function getSuitValue()
     {
-        return array_key_exists($rank, self::$ranks);
-    }  
-    
-    public static function getSuitValue($suit)
-    {
-        if (self::isValidSuit($suit))
-        {
-            return self::$suits[$suit];
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public static function getRankValue($rank)
-    {
-        if (self::isValidRank($rank))
-        {
-            return self::$ranks[$rank]["value"];
-        }
-        else
-        {
-            return false;
-        }
+        return $this->suitValue;
     }
 
     public function getRankName()
     {
-        return self::$ranks[$this->rank]["name"];
+        return $this->rankName;
+    }
+
+    public function getRankValue()
+    {
+        return $this->rankValue;
     }
 }
 
