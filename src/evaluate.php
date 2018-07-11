@@ -6,6 +6,9 @@ class evaluate
     var $done = 1;
     var $cards = array();
 
+    var $highest;
+    var $besthand;
+
     function __construct()
     {
         $this->cards = array(
@@ -235,10 +238,10 @@ class evaluate
 
     private function getValueOfFive($cards)
     {
-        $rankValue = 1;
-        $suitValue = 1;
+        $rankValue = $cards[0]->getRankValue();
+        $suitValue = $cards[0]->getSuitValue();
 
-        for ($i = 0; $i < 5; $i++)
+        for ($i = 1; $i < 5; $i++)
         {
             $rankValue *= $cards[$i]->getRankValue();
             $suitValue *= $cards[$i]->getSuitValue();
@@ -269,7 +272,7 @@ class evaluate
         else
         {
             $count = 0;
-            $highest = count($this->rankings) + 1;
+            $this->highest = count($this->rankings) + 1;
 
             for ($a = count($cards) - 1; $a >= 0; $a--)
             {
@@ -291,9 +294,10 @@ class evaluate
 
                                 $rank = $this->getValueOfFive($currentHand);
 
-                                if ($rank < $highest) // lowest rank is best, 1 = Royal Flush.
+                                if ($rank < $this->highest) // lowest rank is best, 1 = Royal Flush.
                                 {
-                                    $highest = $rank;
+                                    $this->highest = $rank;
+                                    $this->bestHand = $currentHand;
                                 }
                             }
                         }
@@ -301,7 +305,7 @@ class evaluate
                 }
             }
 
-            return $highest;
+            return $this->highest;
         }
 
     }
@@ -328,7 +332,12 @@ class evaluate
         return $cards;
     }
 
-    public function getHandName($rank, $cards)
+    public function getHandName()
+    {
+        return $this->calculateHandName($this->highest, $this->bestHand);
+    }
+
+    private function calculateHandName($rank, $cards)
     {
         $name = "";
         $cards = self::sortCardsByRanks($cards);

@@ -59,7 +59,7 @@ This is a factory class that will generate, shuffle and deal a deck of 52 cards.
  
 	$evaluate = new evaluate();
 	$rank = $evaluate->getValue($cards);
-	$name = $evaluate->getHandName($cards, $rank);
+	$name = $evaluate->getHandName();
 
 	echo "Rank: $rank" . PHP_EOL;
 	echo "Name: $name" . PHP_EOL;

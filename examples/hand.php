@@ -32,10 +32,10 @@ $playerTwo[]=$deck->draw();
 $evaluate = new evaluate();
 
 $playerOneRank = $evaluate->getValue($playerOne);
-$playerOneHand = $evaluate->getHandName($playerOneRank, $playerOne);
+$playerOneHand = $evaluate->getHandName();
 
 $playerTwoRank = $evaluate->getValue($playerTwo);
-$playerTwoHand = $evaluate->getHandName($playerTwoRank, $playerTwo);
+$playerTwoHand = $evaluate->getHandName();
 
 // display the winner
 if ($playerOneRank < $playerTwoRank)
