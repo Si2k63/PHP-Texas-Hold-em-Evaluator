@@ -1,213 +1,140 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
+use Si2k63\PokerHandEvaluator\Card;
+use Si2k63\PokerHandEvaluator\Deck;
+use Si2k63\PokerHandEvaluator\Enums\Rank;
+use Si2k63\PokerHandEvaluator\Enums\Suit;
+use Si2k63\PokerHandEvaluator\Evaluator;
+use Si2k63\PokerHandEvaluator\Hand;
 
 class evaluateTest extends TestCase
 {
-
-    var $evaluate;
-
-    public function __construct()
+    public function testHandNames()
     {
-        $this->evaluate = new evaluate();
-    }
-    
-    public function testGetHandName()
-    {
-        $cards = array(
-            new card("A", "d"),
-            new card("K", "d"),
-            new card("Q", "d"),
-            new card("J", "d"),
-            new card("T", "d")
-        );
+        $testHands = [
+            'Royal Flush.' => [
+                new Card(Rank::Ace, Suit::Diamonds),
+                new Card(Rank::King, Suit::Diamonds),
+                new Card(Rank::Queen, Suit::Diamonds),
+                new Card(Rank::Jack, Suit::Diamonds),
+                new Card(Rank::Ten, Suit::Diamonds)
+            ],
+            'Straight Flush, Five high.' => [
+                new Card(Rank::Ace, Suit::Diamonds),
+                new Card(Rank::Two, Suit::Diamonds),
+                new Card(Rank::Three, Suit::Diamonds),
+                new Card(Rank::Five, Suit::Diamonds),
+                new Card(Rank::Four, Suit::Diamonds),
+            ],
+            'Four of a Kind, Kings with a Queen kicker.' => [
+                new Card(Rank::King, Suit::Diamonds),
+                new Card(Rank::King, Suit::Clubs),
+                new Card(Rank::King, Suit::Spades),
+                new Card(Rank::King, Suit::Hearts),
+                new Card(Rank::Queen, Suit::Diamonds)
+            ],
+            'Full House, Queens full of Jacks.' => [
+                new Card(Rank::Queen, Suit::Diamonds),
+                new Card(Rank::Queen, Suit::Clubs),
+                new Card(Rank::Jack, Suit::Spades),
+                new Card(Rank::Jack, Suit::Hearts),
+                new Card(Rank::Queen, Suit::Spades)
+            ],
+            'Flush, Ace high - Ace, Eight, Five, Four, Two.' => [
+                new Card(Rank::Ace, Suit::Diamonds),
+                new Card(Rank::Eight, Suit::Diamonds),
+                new Card(Rank::Five, Suit::Diamonds),
+                new Card(Rank::Four, Suit::Diamonds),
+                new Card(Rank::Two, Suit::Diamonds)
+            ],
+            'Straight, Jack high - Jack, Ten, Nine, Eight, Seven.' => [
+                new Card(Rank::Jack, Suit::Diamonds),
+                new Card(Rank::Ten, Suit::Clubs),
+                new Card(Rank::Nine, Suit::Spades),
+                new Card(Rank::Eight, Suit::Hearts),
+                new Card(Rank::Seven, Suit::Diamonds)
+            ],
+            'Straight, Five high - Five, Four, Three, Two, Ace.' => [
+                new Card(Rank::Ace, Suit::Diamonds),
+                new Card(Rank::Two, Suit::Clubs),
+                new Card(Rank::Five, Suit::Diamonds),
+                new Card(Rank::Three, Suit::Hearts),
+                new Card(Rank::Four, Suit::Spades)
+            ],
+            'Three of a Kind, Fives with Ace and Eight kickers.' => [
+                new Card(Rank::Five, Suit::Diamonds),
+                new Card(Rank::Five, Suit::Clubs),
+                new Card(Rank::Five, Suit::Spades),
+                new Card(Rank::Eight, Suit::Hearts),
+                new Card(Rank::Ace, Suit::Clubs)
+            ],
+            'Two pair, Aces and Fives with a Jack kicker.' => [
+                new Card(Rank::Ace, Suit::Diamonds),
+                new Card(Rank::Ace, Suit::Clubs),
+                new Card(Rank::Five, Suit::Spades),
+                new Card(Rank::Five, Suit::Diamonds),
+                new Card(Rank::Jack, Suit::Hearts),
+            ],
+            'One Pair, Aces with Five, Three, Two kickers.' => [
+                new Card(Rank::Ace, Suit::Diamonds),
+                new Card(Rank::Ace, Suit::Clubs),
+                new Card(Rank::Two, Suit::Spades),
+                new Card(Rank::Five, Suit::Diamonds),
+                new Card(Rank::Three, Suit::Hearts),
+            ]
+        ];
 
-        $this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "Royal Flush.",
-            $this->evaluate->getHandName()
-        );
+        $evaluator = new Evaluator();
 
-        // Test 5 high straight flush (special case where ace is low)
-        $cards = array(
-            new card("A", "d"),
-            new card("2", "d"),
-            new card("3", "d"),
-            new card("4", "d"),
-            new card("5", "d")
-        );
-
-        $this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "Straight Flush, Five high.",
-            $this->evaluate->getHandName()
-        );
-
-        $cards = array(
-            new card("K", "d"),
-            new card("K", "c"),
-            new card("K", "h"),
-            new card("K", "s"),
-            new card("Q", "d")
-        );
-
-        $this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "Four of a Kind, Kings with a Queen kicker.",
-            $this->evaluate->getHandName()
-        );
-
-        $cards = array(
-            new card("J", "d"),
-            new card("Q", "c"),
-            new card("J", "h"),
-            new card("Q", "s"),
-            new card("Q", "d")
-        );
-
-        $this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "Full House, Queens full of Jacks.",
-            $this->evaluate->getHandName()
-        );
-
-        $cards = array(
-            new card("A", "h"),
-            new card("8", "h"),
-            new card("5", "h"),
-            new card("4", "h"),
-            new card("2", "h")
-        );
-
-        $this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "Flush, Ace high - Ace, Eight, Five, Four, Two.",
-            $this->evaluate->getHandName()
-        );
-
-        $cards = array(
-            new card("J", "h"),
-            new card("8", "c"),
-            new card("9", "s"),
-            new card("T", "d"),
-            new card("7", "h")
-        );
-
-        $this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "Straight, Jack high - Jack, Ten, Nine, Eight, Seven.",
-            $this->evaluate->getHandName()
-        );
-
-        // Test 5 high straight (special case where ace is low)
-        $cards = array(
-            new card("5", "h"),
-            new card("A", "c"),
-            new card("2", "s"),
-            new card("3", "d"),
-            new card("4", "h")
-        );
-
-        $$this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "Straight, Five high - Five, Four, Three, Two, Ace.",
-            $this->evaluate->getHandName()
-        );
-
-        $cards = array(
-            new card("5", "h"),
-            new card("5", "c"),
-            new card("5", "s"),
-            new card("8", "d"),
-            new card("A", "h")
-        );
-
-        $this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "Three of a Kind, Fives with Ace and Eight kickers.",
-            $this->evaluate->getHandName()
-        );
-
-        $cards = array(
-            new card("A", "h"),
-            new card("5", "c"),
-            new card("A", "s"),
-            new card("J", "d"),
-            new card("5", "h")
-        );
-
-        $this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "Two pair, Aces and Fives with a Jack kicker.",
-            $this->evaluate->getHandName()
-        );
-
-        $cards = array(
-            new card("A", "h"),
-            new card("3", "c"),
-            new card("2", "s"),
-            new card("A", "d"),
-            new card("5", "h")
-        );
-
-        $this->evaluate->getValue($cards);
-        
-        $this->assertEquals(
-            "One Pair, Aces with Five, Three, Two kickers.",
-            $this->evaluate->getHandName()
-        );
-
+        foreach ($testHands as $testName => $testHand) {
+            $result = $evaluator->evaluate(Hand::fromArray($testHand));
+            $this->assertEquals(
+                $testName,
+                $result->getName()
+            );
+        };
     }
 
     public function testAllHands()
     {
         // hands.json file generated by hand using list at: http://suffe.cool/poker/7462.html    
+        $evaluator = new Evaluator();
 
-        $suitOrder = array('c','h','d','s','c');
+        $suits = [
+            Suit::Clubs,
+            Suit::Diamonds,
+            Suit::Hearts,
+            Suit::Spades,
+            Suit::Clubs
+        ];
+
         $hands = json_decode(file_get_contents("tests/hands.json"));
 
-        for ($i = 0; $i < count($hands); $i++) 
-        {
-            $cards = array();
+        for ($i = 0; $i < count($hands); $i++) {
+            $hand = new Hand();
 
-            for ($k = 0; $k < count($hands[$i]->cards); $k++)
-            {
-                if ($hands[$i]->suited)
-                {
-                    $suit = 'd';
-                }
-                else
-                {
-                    $suit = $suitOrder[$k];
+            for ($k = 0; $k < count($hands[$i]->cards); $k++) {
+                if ($hands[$i]->suited) {
+                    $suit = Suit::Diamonds;
+                } else {
+                    $suit = $suits[$k];
                 }
 
-                $cards[]=new card($hands[$i]->cards[$k], $suit);
-
-
+                $hand->addCard(new Card(Rank::fromString($hands[$i]->cards[$k]), $suit));
             }
 
-            $rank = $this->evaluate->getValue($cards);
+            $result = $evaluator->evaluate($hand);
 
             $this->assertEquals(
                 $i + 1,
-                $rank
+                $result->getRank()
             );
 
             $this->assertNotEquals(
                 0,
-                strlen($this->evaluate->getHandName())
+                strlen($result->getName())
             );
         }
     }
-
 }
-
-?>

@@ -1,22 +1,29 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
+use Si2k63\PokerHandEvaluator\Card;
+use Si2k63\PokerHandEvaluator\Deck;
+use Si2k63\PokerHandEvaluator\Enums\Rank;
+use Si2k63\PokerHandEvaluator\Enums\Suit;
 
 class deckTest extends TestCase
 {
     public function testDrawValidCard()
     {
-        $deck = new deck();
+        $deck = new Deck();
+        $card = $deck->drawCards(1)[0];
+
 
         $this->assertInstanceOf(
-            card::class,
-            $deck->draw()
+            Card::class,
+            $card
         );
     }
 
     public function testdoesContain()
     {
-        $deck = new deck();
-        $card = new card("2", "c");
+        $deck = new Deck();
+        $card = new Card(Rank::Two, Suit::Clubs);
 
         $this->assertEquals(
             true,
@@ -27,7 +34,7 @@ class deckTest extends TestCase
     public function testdoesNotContain()
     {
         $deck = new deck();
-        $card = $deck->draw();
+        $card = $deck->drawCards()[0];
 
         $this->assertEquals(
             false,
@@ -37,82 +44,75 @@ class deckTest extends TestCase
 
     public function testEmptyDeck()
     {
-        $deck = new deck();
+        $deck = new Deck();
 
-        for ($i = 0; $i < 52; $i++)
-        {
-            $deck->draw();
+        for ($i = 0; $i < 52; $i++) {
+            $deck->drawCards(1);
         }
 
-        $this->assertEquals(
-            false,
-            $deck->draw()
-        );
+        $this->expectException(\Exception::class);
+        $deck->drawCards(1);
     }
 
     public function testDrawSpecificNumber()
     {
-        $deck = new deck();
+        $deck = new Deck();
 
         $this->assertEquals(
             7,
-            count($deck->draw(7))
-        );    
+            count($deck->drawCards(7))
+        );
     }
 
     public function testEmptyShuffle()
     {
-        $deck = new deck();
-        $deck->draw(52);
+        $deck = new Deck();
+        $deck->drawCards(52);
 
-        $this->assertEquals(
-            false,
-            $deck->shuffle()
-        );
+        $this->expectException(\Exception::class);
+        $deck->shuffle();
     }
 
     public function testDrawSpecificCard()
     {
-        $deck = new deck();
-        $card = new card("A", "d");
+        $deck = new Deck();
+
+        $rank = Rank::King;
+        $suit = Suit::Hearts;
+
+        $card = $deck->getCard($rank, $suit);
 
         $this->assertEquals(
-            $card,
-            $deck->card("A", "d")
+            $card->getRank(),
+            $rank
         );
 
+        $this->assertEquals(
+            $card->getSuit(),
+            $suit
+        );
     }
 
     public function testShuffle()
     {
-        $controlDeck = new deck();
-        $testDeck = new deck();
-        $testDeck->shuffle();
         $matches = true;
+        $controlDeck = new Deck();
+        $testDeck = new Deck();
+        $testDeck->shuffle();
 
-        while ($matches) // in case the decks match after shuffling!
-        {
-            for ($i = 0; $i < 52; $i++)
-            {
-                $card1 = $controlDeck->draw();
-                $card2 = $testDeck->draw();
-    
-                if ($card1->getRank() != $card2->getRank() || $card1->getSuit() != $card2->getSuit())
-                {
-                    $matches = false;
-                    break;
-                }
+        $controlCards = $controlDeck->drawCards(52);
+        $testCards = $testDeck->drawCards(52);
+
+        for ($i = 0; $i < 52; $i++) {
+            if ($controlCards[$i]->toString() !== $testCards[$i]->toString()) {
+                $matches = false;
+                break;
             }
-
-            if ($matches) $testDeck->shuffle();
         }
 
         $this->assertEquals(
             false,
             $matches
         );
-
     }
 }
-
-?>
