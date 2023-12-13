@@ -1,10 +1,18 @@
 {
+    "name": "si2k63/poker-hand-evaluator",
+    "description": "A composer library for evaluating poker hands",
+    "type": "library",
     "autoload": {
-        "classmap": [
-            "src/"
-        ]
+        "psr-4": {
+            "Si2k63\\PokerHandEvaluator\\": "src/"
+        }
     },
+    "authors": [
+        {
+            "name": "Simon Phillips"
+        }
+    ],
     "require-dev": {
-        "phpunit/phpunit": "^5"
+        "phpunit/phpunit": "^10.5"
     }
 }
