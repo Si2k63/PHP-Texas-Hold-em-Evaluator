@@ -1,62 +1,30 @@
 <?php
+require __DIR__ . "/../vendor/autoload.php";
+/**
+ * Example 1 - Deal two random hands and determine a winner.
+ */
 
-$time_start = microtime(true);
-require "../vendor/autoload.php";
+use Si2k63\PokerHandEvaluator\Deck;
+use Si2k63\PokerHandEvaluator\Evaluator;
+use Si2k63\PokerHandEvaluator\Hand;
 
-/* Hand Example:
-Deal two players a random hand each and compare them to determine the winner.
-*/
-
-
-// create a deck and shuffle it
-$deck = new deck();
+$deck = new Deck();
 $deck->shuffle();
 
-// deal five cards to player one
-$playerOne = array();
-$playerOne[]=$deck->draw();
-$playerOne[]=$deck->draw();
-$playerOne[]=$deck->draw();
-$playerOne[]=$deck->draw();
-$playerOne[]=$deck->draw();
+$firstHand = Hand::fromArray($deck->drawCards(5));
+$secondHand = Hand::fromArray($deck->drawCards(5));
 
-// deal five cards to player two
-$playerTwo = array();
-$playerTwo[]=$deck->draw();
-$playerTwo[]=$deck->draw();
-$playerTwo[]=$deck->draw();
-$playerTwo[]=$deck->draw();
-$playerTwo[]=$deck->draw();
+$evaluator = new Evaluator();
 
-// determine the strength of both hands
-$evaluate = new evaluate();
+$firstResult = $evaluator->evaluate($firstHand);
+$secondResult = $evaluator->evaluate($secondHand);
 
-$playerOneRank = $evaluate->getValue($playerOne);
-$playerOneHand = $evaluate->getHandName();
-
-$playerTwoRank = $evaluate->getValue($playerTwo);
-$playerTwoHand = $evaluate->getHandName();
-
-// display the winner
-if ($playerOneRank < $playerTwoRank)
-{
-    echo "Player one is the winner with: $playerOneHand" . PHP_EOL;
-    echo "Player two is the loser with: $playerTwoHand" . PHP_EOL;   
-}
-else
-{
-    if ($playerOneRank == $playerTwoRank)
-    {
-        echo "It's a tie! Both players have: $playerOneHand" . PHP_EOL;
+if ($firstResult->getRank() < $secondResult->getRank()) {
+    echo 'First hand is the winner with: ' . $firstResult->getName() . PHP_EOL;
+} else {
+    if ($firstResult->getRank() == $secondResult->getRank()) {
+        echo "It's a tie! Both players have: " . $firstResult->getName() . PHP_EOL;
+    } else {
+        echo 'Second hand is the winner with: ' . $secondResult->getName() . PHP_EOL;
     }
-    else
-    {
-        echo "Player two is the winner with: $playerTwoHand" . PHP_EOL;
-        echo "Player one is the loser with: $playerOneHand" . PHP_EOL;   
-     }
 }
-
-$time_end = microtime(true);
-echo "Hand dealt and evaluated in " . ($time_end - $time_start) . " seconds.";
-
-?>
