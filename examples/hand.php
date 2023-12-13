@@ -19,6 +19,9 @@ $evaluator = new Evaluator();
 $firstResult = $evaluator->evaluate($firstHand);
 $secondResult = $evaluator->evaluate($secondHand);
 
+echo 'Hand 1:' . $firstHand->toString() . PHP_EOL;
+echo 'Hand 2:' . $secondHand->toString() . PHP_EOL;
+
 if ($firstResult->getRank() < $secondResult->getRank()) {
     echo 'First hand is the winner with: ' . $firstResult->getName() . PHP_EOL;
 } else {
