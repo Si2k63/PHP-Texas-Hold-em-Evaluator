@@ -9,6 +9,10 @@ enum Suit: int
     case Clubs      = 47;
     case Spades     = 53;
 
+    /**
+     * Return the short English name of the suit (e.g. h, d, c, s)
+     * @return string
+     */
     public function getShortName(): string
     {
         return match ($this) {

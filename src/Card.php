@@ -15,34 +15,56 @@ class Card
         $this->rank = $rank;
         $this->suit = $suit;
     }
-
+    /**
+     * Returns the Rank associated with the current instance of the card.
+     * @return Rank
+     */
     public function getRank(): Rank
     {
         return $this->rank;
     }
 
+    /**
+     * Returns the Suit associated with the current instance of the card.
+     * @return Suit
+     */
     public function getSuit(): Suit
     {
         return $this->suit;
     }
 
+    /**
+     * Convert the Card instance to a human readable string (e.g. Ad).
+     * @return string
+     */
     public function toString(): string
     {
         return $this->rank->getShortName() . $this->suit->getShortName();
     }
 
+    /**
+     * Get the unique integer for this card.
+     * @return int
+     */
     public function getValue(): int
     {
         return $this->rank->value * $this->suit->value;
     }
 
+    /**
+     * Check whether the current Card instance matches a specific rank and suit.
+     * @param Rank $rank
+     * @param Suit $suit
+     * 
+     * @return bool
+     */
     public function matches(Rank $rank, Suit $suit): bool
     {
-        if ($this->rank !== $rank) {
+        if ($this->rank->value !== $rank->value) {
             return false;
         }
 
-        if ($this->suit !== $suit) {
+        if ($this->suit->value !== $suit->value) {
             return false;
         }
 

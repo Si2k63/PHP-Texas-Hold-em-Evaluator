@@ -21,6 +21,10 @@ class Deck
         }
     }
 
+    /**
+     * Shuffle the deck into a random order.
+     * @return void
+     */
     public function shuffle(): void
     {
         $totalCards = count($this->cards);
@@ -31,7 +35,13 @@ class Deck
         shuffle($this->cards);
     }
 
-    public function contains(Card $card)
+    /**
+     * Check if a deck contains a specific card.
+     * @param Card $card
+     * 
+     * @return bool
+     */
+    public function contains(Card $card): bool
     {
         foreach ($this->cards as $deckCard) {
             if ($deckCard->matches($card->getRank(), $card->getSuit())) {
@@ -42,6 +52,12 @@ class Deck
         return false;
     }
 
+    /**
+     * Draw $count cards from the deck and return them in an array.
+     * @param int $count
+     *
+     * @return Card[] 
+     */
     public function drawCards(int $count = 1): array
     {
         $cards = [];
@@ -61,6 +77,13 @@ class Deck
         return $cards;
     }
 
+    /**
+     * Draw a specific card from the deck by its rank and suit.
+     * @param Rank $rank
+     * @param Suit $suit
+     *
+     * @return Card
+     */
     public function getCard(Rank $rank, Suit $suit): Card
     {
         foreach ($this->cards as $key => $card) {

@@ -32,12 +32,6 @@ class Evaluator implements HandEvaluator
         $this->straights(true);
     }
 
-    private function addRankedHand(array $cards)
-    {
-        $hand = Hand::fromArray($cards);
-        $this->rankedHands[$hand->getRankValues()] = count($this->rankedHands) + 1;
-    }
-
     private function fourOfAKind(): void
     {
         foreach ($this->ranks as $primaryRank) {
@@ -80,7 +74,6 @@ class Evaluator implements HandEvaluator
     {
         $this->highCards(true);
     }
-
 
     private function straights(bool $sameSuit = false): void
     {
@@ -135,6 +128,29 @@ class Evaluator implements HandEvaluator
         }
     }
 
+    private function pairs()
+    {
+        for ($a = 0; $a < count($this->ranks); $a++) {
+            for ($b = 0; $b < count($this->ranks); $b++) {
+                for ($c = $b + 1; $c < count($this->ranks); $c++) {
+                    for ($d = $c + 1; $d < count($this->ranks); $d++) {
+                        if ($a == $b || $a == $c || $a == $d || $b == $d) {
+                            continue;
+                        }
+
+                        $this->addRankedHand([
+                            new Card($this->ranks[$a], Suit::Diamonds),
+                            new Card($this->ranks[$a], Suit::Hearts),
+                            new Card($this->ranks[$b], Suit::Clubs),
+                            new Card($this->ranks[$c], Suit::Spades),
+                            new Card($this->ranks[$d], Suit::Diamonds),
+                        ]);
+                    }
+                }
+            }
+        }
+    }
+
     private function highCards(bool $sameSuit = false): void
     {
         for ($a = 0; $a < count($this->ranks); $a++) {
@@ -159,30 +175,26 @@ class Evaluator implements HandEvaluator
         }
     }
 
-    private function pairs()
-    {
-        for ($a = 0; $a < count($this->ranks); $a++) {
-            for ($b = 0; $b < count($this->ranks); $b++) {
-                for ($c = $b + 1; $c < count($this->ranks); $c++) {
-                    for ($d = $c + 1; $d < count($this->ranks); $d++) {
-                        if ($a == $b || $a == $c || $a == $d || $b == $d) {
-                            continue;
-                        }
 
-                        $this->addRankedHand([
-                            new Card($this->ranks[$a], Suit::Diamonds),
-                            new Card($this->ranks[$a], Suit::Hearts),
-                            new Card($this->ranks[$b], Suit::Clubs),
-                            new Card($this->ranks[$c], Suit::Spades),
-                            new Card($this->ranks[$d], Suit::Diamonds),
-                        ]);
-                    }
-                }
-            }
-        }
+    /**
+     * Add an array of cards to the list of hand rankings.
+     * @param array $cards
+     * 
+     * @return void
+     */
+    private function addRankedHand(array $cards): void
+    {
+        $hand = Hand::fromArray($cards);
+        $this->rankedHands[$hand->getRankValues()] = count($this->rankedHands) + 1;
     }
 
-    private function getRank(Hand $hand): int
+    /**
+     * Get a hand's absolute rank (e.g. Royal Flush returns 1).
+     * @param Hand $hand
+     * 
+     * @return int
+     */
+    private function getRanking(Hand $hand): int
     {
         $value = $hand->getRankValues();
 
@@ -193,18 +205,24 @@ class Evaluator implements HandEvaluator
         throw new \Exception("Invalid hand supplied to evaluator.");
     }
 
+    /**
+     * Take an instance of a hand and its rank and return its full English name.
+     * @param Hand $hand
+     * @param int $rank
+     * 
+     * @return string
+     */
     private function getName(Hand $hand, int $rank): string
     {
         $cards = $hand->sortByRank()->getCards();
 
-        // fix inconsistencies
         $firstCardName = $cards[0]->getRank()->name;
-        $secondCard = $cards[1]->getRank()->name;
-        $thirdCard = $cards[2]->getRank()->name;
-        $fourthCard = $cards[3]->getRank()->name;
-        $fifthCard = $cards[4]->getRank()->name;
-        $article = $fifthCard == 'Ace' ? 'an' : 'a';
-        $kicker = $article . ' ' . $fifthCard . ' kicker.';
+        $secondCardName = $cards[1]->getRank()->name;
+        $thirdCardName = $cards[2]->getRank()->name;
+        $fourthCardName = $cards[3]->getRank()->name;
+        $fifthCardName = $cards[4]->getRank()->name;
+        $article = $fifthCardName == 'Ace' ? 'an' : 'a';
+        $kicker = $article . ' ' . $fifthCardName . ' kicker.';
 
         if ($rank === 1) {
             return "Royal Flush.";
@@ -215,7 +233,7 @@ class Evaluator implements HandEvaluator
         }
 
         if ($rank === 10) {
-            return 'Straight Flush, ' . $secondCard . ' high.';
+            return 'Straight Flush, ' . $secondCardName . ' high.';
         }
 
         if (in_array($rank, range(11, 166))) {
@@ -223,39 +241,39 @@ class Evaluator implements HandEvaluator
         }
 
         if (in_array($rank, range(167, 322))) {
-            return 'Full House, ' . $firstCardName . 's full of ' . $fifthCard . 's.';
+            return 'Full House, ' . $firstCardName . 's full of ' . $fifthCardName . 's.';
         }
 
         if (in_array($rank, range(323, 1599))) {
-            return 'Flush, ' . $firstCardName . ' high - ' . $firstCardName . ', ' . $secondCard . ', ' . $thirdCard . ', ' . $fourthCard . ', ' . $fifthCard . '.';
+            return 'Flush, ' . $firstCardName . ' high - ' . $firstCardName . ', ' . $secondCardName . ', ' . $thirdCardName . ', ' . $fourthCardName . ', ' . $fifthCardName . '.';
         }
 
         if (in_array($rank, range(1600, 1608))) {
-            return 'Straight, ' . $firstCardName . ' high - ' . $firstCardName . ', ' . $secondCard . ', ' . $thirdCard . ', ' . $fourthCard . ', ' . $fifthCard . '.';
+            return 'Straight, ' . $firstCardName . ' high - ' . $firstCardName . ', ' . $secondCardName . ', ' . $thirdCardName . ', ' . $fourthCardName . ', ' . $fifthCardName . '.';
         }
 
         if ($rank === 1609) {
-            return 'Straight, ' . $secondCard . ' high - ' . $secondCard . ', ' . $thirdCard . ', ' . $fourthCard . ', ' . $fifthCard . ', ' . $firstCardName . '.';
+            return 'Straight, ' . $secondCardName . ' high - ' . $secondCardName . ', ' . $thirdCardName . ', ' . $fourthCardName . ', ' . $fifthCardName . ', ' . $firstCardName . '.';
         }
 
         if (in_array($rank, range(1610, 2467))) {
-            return 'Three of a Kind, ' . $firstCardName . 's with ' . $fourthCard . ' and ' .  $fifthCard . ' kickers.';
+            return 'Three of a Kind, ' . $firstCardName . 's with ' . $fourthCardName . ' and ' .  $fifthCardName . ' kickers.';
         }
 
         if (in_array($rank, range(2468, 3325))) {
-            return 'Two pair, ' . $firstCardName . 's and ' . $thirdCard . 's with ' . $kicker;
+            return 'Two pair, ' . $firstCardName . 's and ' . $thirdCardName . 's with ' . $kicker;
         }
 
         if (in_array($rank, range(3326, 6185))) {
-            return 'One Pair, ' . $firstCardName . 's with ' . $thirdCard . ', ' . $fourthCard . ', ' . $fifthCard . ' kickers.';
+            return 'One Pair, ' . $firstCardName . 's with ' . $thirdCardName . ', ' . $fourthCardName . ', ' . $fifthCardName . ' kickers.';
         }
 
-        return $firstCardName . ' high - ' . $firstCardName . ', ' . $secondCard . ', ' . $thirdCard . ', ' . $fourthCard . ', ' . $fifthCard . '.';
+        return $firstCardName . ' high - ' . $firstCardName . ', ' . $secondCardName . ', ' . $thirdCardName . ', ' . $fourthCardName . ', ' . $fifthCardName . '.';
     }
 
     public function evaluate(Hand $hand): EvaluatorResult
     {
-        $rank = $this->getRank($hand);
+        $rank = $this->getRanking($hand);
         $name = $this->getName($hand, $rank);
 
         return new Result(

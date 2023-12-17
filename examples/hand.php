@@ -22,10 +22,10 @@ $secondResult = $evaluator->evaluate($secondHand);
 echo 'Hand 1:' . $firstHand->toString() . PHP_EOL;
 echo 'Hand 2:' . $secondHand->toString() . PHP_EOL;
 
-if ($firstResult->getRank() < $secondResult->getRank()) {
+if ($firstResult->getRanking() < $secondResult->getRanking()) {
     echo 'First hand is the winner with: ' . $firstResult->getName() . PHP_EOL;
 } else {
-    if ($firstResult->getRank() == $secondResult->getRank()) {
+    if ($firstResult->getRanking() == $secondResult->getRanking()) {
         echo "It's a tie! Both players have: " . $firstResult->getName() . PHP_EOL;
     } else {
         echo 'Second hand is the winner with: ' . $secondResult->getName() . PHP_EOL;

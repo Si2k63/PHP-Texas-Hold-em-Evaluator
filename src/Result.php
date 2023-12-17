@@ -6,18 +6,18 @@ use Si2k63\PokerHandEvaluator\Interfaces\EvaluatorResult;
 
 class Result implements EvaluatorResult
 {
-    private int $rank;
+    private int $ranking;
     private string $name;
 
-    public function __construct(int $rank, string $name)
+    public function __construct(int $ranking, string $name)
     {
-        $this->rank = $rank;
+        $this->ranking = $ranking;
         $this->name = $name;
     }
 
-    public function getRank(): int
+    public function getRanking(): int
     {
-        return $this->rank;
+        return $this->ranking;
     }
 
     public function getName(): string

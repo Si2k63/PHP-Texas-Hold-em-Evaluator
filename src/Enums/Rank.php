@@ -18,6 +18,10 @@ enum Rank: int
     case Three  = 3;
     case Two    = 2;
 
+    /**
+     * Return the short English name of the rank (e.g. A, K, Q etc).
+     * @return string
+     */
     public function getShortName(): string
     {
         return match ($this) {
@@ -37,6 +41,12 @@ enum Rank: int
         };
     }
 
+    /**
+     * Return a rank from a string.
+     * @param String $rank
+     * 
+     * @return Rank
+     */
     public static function fromString(String $rank): Rank
     {
         $cases = Rank::cases();

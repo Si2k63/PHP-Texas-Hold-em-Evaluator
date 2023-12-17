@@ -53,13 +53,13 @@ for ($a = 0; $a < count($cards); $a++) {
             ]);
 
             try {
-                $hand1rank = $evaluate->evaluate($hand1)->getRank();
+                $hand1rank = $evaluate->evaluate($hand1)->getRanking();
             } catch (\Exception $e) {
                 die($hand1->toString() . ':' . $e);
             }
 
             try {
-                $hand2rank = $evaluate->evaluate($hand2)->getRank();
+                $hand2rank = $evaluate->evaluate($hand2)->getRanking();
             } catch (\Exception $e) {
                 die($hand2->toString() . ':' . $e);
             }

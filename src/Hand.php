@@ -6,16 +6,30 @@ class Hand
 {
     private $cards = [];
 
-    public function addCard(Card $card)
+    /**
+     * Add a card instance to the hand.
+     * @param Card $card
+     * 
+     * @return void
+     */
+    public function addCard(Card $card): void
     {
         $this->cards[] = $card;
     }
 
+    /**
+     * Return an array of the cards contained in the hand
+     * @return Card[]
+     */
     public function getCards(): array
     {
         return $this->cards;
     }
 
+    /**
+     * Sort the cards in the hand by their rank.
+     * @return Hand
+     */
     public function sortByRank(): Hand
     {
         usort($this->cards, function ($a, $b) {
@@ -37,6 +51,10 @@ class Hand
         return $this;
     }
 
+    /**
+     * Convert the hand to a human readable string (e.g. Ad Kd Qd Jd Td).
+     * @return string
+     */
     public function toString(): string
     {
         $mapped = array_map(
@@ -48,6 +66,10 @@ class Hand
         return implode(' ', $mapped);
     }
 
+    /**
+     * Generate a unique identifier for the hand that can be used against the lookup table in an Evaluator to determine its absolute rank.
+     * @return int
+     */
     public function getRankValues(): int
     {
         $value = array_product(array_map(
@@ -71,7 +93,13 @@ class Hand
         return $value;
     }
 
-    public static function fromArray(array $cards)
+    /**
+     * Create a hand instance from an array of cards.
+     * @param array $cards
+     * 
+     * @return Hand
+     */
+    public static function fromArray(array $cards): Hand
     {
         $hand = new Hand();
         foreach ($cards as $card) {

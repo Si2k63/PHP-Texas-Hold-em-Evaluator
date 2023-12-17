@@ -128,7 +128,7 @@ class evaluateTest extends TestCase
 
             $this->assertEquals(
                 $i + 1,
-                $result->getRank()
+                $result->getRanking()
             );
 
             $this->assertNotEquals(
