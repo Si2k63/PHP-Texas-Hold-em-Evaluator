@@ -2,6 +2,9 @@
 
 namespace Si2k63\PokerHandEvaluator;
 
+use Si2k63\PokerHandEvaluator\Enums\Rank;
+use Si2k63\PokerHandEvaluator\Enums\Suit;
+
 class Hand
 {
     private $cards = [];
@@ -106,5 +109,31 @@ class Hand
             $hand->addCard($card);
         }
         return $hand;
+    }
+
+    /**
+     * Create a hand instance from a string in the following format: Ad Ac Kd Ks 4h
+     * @param string $hand
+     *
+     * @return Hand
+     */
+    public static function fromString(string $hand): Hand
+    {
+      $cards = explode(" ", $hand);
+
+      if (count($cards) < 5) {
+        throw new \Exception("Invalid hand string supplied");
+      }
+
+      $hand = new Hand();
+
+      foreach ($cards as $card) {
+        $rank = Rank::fromString($card[0]);
+        $suit = Suit::fromString($card[1]);
+        $card = new Card($rank, $suit);
+        $hand->addCard($card);
+      }
+
+      return $hand;
     }
 }

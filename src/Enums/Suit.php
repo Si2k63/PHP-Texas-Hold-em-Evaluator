@@ -22,4 +22,23 @@ enum Suit: int
             Suit::Spades    => 's',
         };
     }
+
+    /**
+     * Return a suit from a string.
+     * @param String $suit
+     *
+     * @return Suit
+     */
+    public static function fromString(String $suit): Suit
+    {
+        $cases = Suit::cases();
+
+        foreach ($cases as $case) {
+            if ($case->getShortName() === $suit) {
+                return $case;
+            }
+        }
+
+        throw new \Exception("Supplied rank does not exist.");
+    }
 }
