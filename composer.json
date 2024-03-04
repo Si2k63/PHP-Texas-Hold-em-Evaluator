@@ -1,5 +1,5 @@
 {
-    "name": "si2k63/poker-hand-evaluator",
+    "name": "si2k63/php-texas-hold-em-evaluator",
     "description": "A composer library for evaluating poker hands",
     "type": "library",
     "autoload": {
