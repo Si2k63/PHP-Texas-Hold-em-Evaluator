@@ -33,7 +33,7 @@ trait EnumExtended
             return [];
         }
 
-        return array_slice($cases, $start, $end);
+        return array_slice($cases, $start, $end, true);
     }
 
     /**
@@ -42,7 +42,7 @@ trait EnumExtended
      *
      * @return Enum
      */
-    public static function fromString(String $shortName): Enum
+    public static function fromString(String $shortName)
     {
         $cases = self::cases();
 
@@ -64,5 +64,4 @@ trait EnumExtended
     {
         throw new \Exception(get_called_class() . " has not implemented a getShortName method");
     }
-
 }

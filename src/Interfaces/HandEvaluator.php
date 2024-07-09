@@ -13,10 +13,4 @@ interface HandEvaluator
      * @return EvaluatorResult
      */
     public function evaluate(Hand $hand): EvaluatorResult;
-
-    /**
-     * Singleton to prevent duplicated work when initiating the evaluator.
-     * @return HandEvaluator
-     */
-    public static function getInstance(): HandEvaluator;
 }
