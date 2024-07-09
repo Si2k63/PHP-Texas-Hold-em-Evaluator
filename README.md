@@ -46,8 +46,11 @@ This is a factory class that will generate, shuffle and deal a deck of 52 cards.
 
 ### Evaluator Class
 
-#### Instantiating the class:
-	$evaluator = new Evaluator();
+The evaluator class is an abstract class that accepts hand iterator classes through its add iterator method.
+
+Currently there is a High Card Evaluator that extends this class and passes in the relevant iterator classes through its constructor.
+#### Instantiating the high card class:
+	$evaluator = new HighCardEvaluator();
 
 #### Determining the rank of a collection of five cards
 	$hand = Hand::fromArray([
@@ -58,11 +61,16 @@ This is a factory class that will generate, shuffle and deal a deck of 52 cards.
 		new Card(Rank::Jack, Suit::Hearts)
 	]);
  
-	$evaluator = new Evaluator();
+	$evaluator = new HighCardEvaluator();
 	$result = $evaluator->evaluate($hand);
 
 	echo "Rank:" . $result->getRanking() . PHP_EOL;
 	echo "Name: $name" . $result->getName() . PHP_EOL;
+
+#### Extending the Evaluator Class
+It is possible to extend the evaluator class and make your own evaluator (e.g a low card hand evaluator for games like 2-7 Triple Draw).
+
+You'd need to implement your own hand iterator, which passes low card hands in order of rank (highest to lowest) into your class.
 
 ## Additional Examples
 
