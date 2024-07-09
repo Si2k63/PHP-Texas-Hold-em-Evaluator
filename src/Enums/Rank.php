@@ -1,9 +1,12 @@
 <?php
-
 namespace Si2k63\PokerHandEvaluator\Enums;
+
+use Si2k63\PokerHandEvaluator\Traits\EnumExtended;
 
 enum Rank: int
 {
+    use EnumExtended;
+
     case Ace    = 37;
     case King   = 31;
     case Queen  = 29;
@@ -39,24 +42,5 @@ enum Rank: int
             Rank::Three => '3',
             Rank::Two   => '2'
         };
-    }
-
-    /**
-     * Return a rank from a string.
-     * @param String $rank
-     * 
-     * @return Rank
-     */
-    public static function fromString(String $rank): Rank
-    {
-        $cases = Rank::cases();
-
-        foreach ($cases as $case) {
-            if ($case->getShortName() === $rank) {
-                return $case;
-            }
-        }
-
-        throw new \Exception("Supplied rank does not exist.");
     }
 }
