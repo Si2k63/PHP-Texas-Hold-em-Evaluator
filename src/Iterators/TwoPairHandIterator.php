@@ -11,8 +11,8 @@ class TwoPairHandIterator implements \IteratorAggregate
 {
     public function getIterator(): \Traversable
     {
-        foreach (Rank::cases() as $primaryRank) {
-            foreach (Rank::excluding([$primaryRank]) as $secondaryRank) {
+        foreach (Rank::cases() as $primaryIndex => $primaryRank) {
+            foreach (Rank::slice($primaryIndex + 1) as $secondaryRank) {
                 foreach (Rank::excluding([$primaryRank, $secondaryRank]) as $tertiaryRank) {
                     yield Hand::fromArray([
                         new Card($primaryRank, Suit::Diamonds),

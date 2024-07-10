@@ -25,13 +25,6 @@ class HighCardEvaluator extends AbstractEvaluator
         $this->addIterator(new HighCardHandIterator(false));
     }
 
-    /**
-     * Take an instance of a hand and its rank and return its full English name.
-     * @param Hand $hand
-     * @param int $rank
-     *
-     * @return string
-     */
     protected function getName(Hand $hand, int $rank): string
     {
         $cards = $hand->sortByRank()->getCards();
@@ -46,7 +39,8 @@ class HighCardEvaluator extends AbstractEvaluator
 
         switch ($rank) {
             case 1:
-                return 'Royal Flush';
+                return 'Royal Flush.';
+
             case in_array($rank, range(2, 9)):
                 return 'Straight Flush, ' . $firstCardName . ' high.';
 

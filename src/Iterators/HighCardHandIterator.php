@@ -25,17 +25,18 @@ class HighCardHandIterator implements \IteratorAggregate
                 foreach (Rank::slice($secondaryIndex + 1) as $tertiaryIndex => $tertiaryRank) {
                     foreach (Rank::slice($tertiaryIndex + 1) as $quarternaryIndex => $quarternaryRank) {
                         foreach (Rank::slice($quarternaryIndex + 1) as $quinaryIndex => $quinaryRank) {
-                            if ($primaryIndex + 4 == $quinaryIndex) {
+                            if ($primaryIndex + 4 == $quinaryIndex || $primaryIndex == 0 && $secondaryIndex == 9) {
                                 continue;
                             }
-
-                            yield Hand::fromArray([
-                              new Card($primaryRank, $this->sameSuit ? Suit::Clubs : Suit::Diamonds),
-                              new Card($secondaryRank, Suit::Clubs),
-                              new Card($tertiaryRank, Suit::Clubs),
-                              new Card($quarternaryRank, Suit::Clubs),
-                              new Card($quinaryRank, Suit::Clubs)
+                            $hand = Hand::fromArray([
+                                new Card($primaryRank, $this->sameSuit ? Suit::Clubs : Suit::Diamonds),
+                                new Card($secondaryRank, Suit::Clubs),
+                                new Card($tertiaryRank, Suit::Clubs),
+                                new Card($quarternaryRank, Suit::Clubs),
+                                new Card($quinaryRank, Suit::Clubs)
                             ]);
+
+                            yield $hand;
                         }
                     }
                 }
