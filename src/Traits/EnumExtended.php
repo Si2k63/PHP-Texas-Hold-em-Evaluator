@@ -6,7 +6,6 @@ trait EnumExtended
 {
     /**
      * Return all cases excluding any contained in the supplied array.
-     *
      * @param array $excludedCases
      *
      * @return array
@@ -19,7 +18,6 @@ trait EnumExtended
 
     /**
      * Return a slice of the Enum's cases
-     *
      * @param int $start
      * @param int $end
      *
@@ -39,8 +37,6 @@ trait EnumExtended
     /**
      * Return an enum from the supplied shortname.
      * @param String $shortName
-     *
-     * @return Enum
      */
     public static function fromString(String $shortName)
     {
@@ -56,7 +52,7 @@ trait EnumExtended
     }
 
     /**
-     * get the short text name for an enum.
+     * Get the short text name for an enum.
      *
      * @return string
      */

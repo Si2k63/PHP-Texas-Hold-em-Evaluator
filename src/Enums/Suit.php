@@ -2,8 +2,12 @@
 
 namespace Si2k63\PokerHandEvaluator\Enums;
 
+use Si2k63\PokerHandEvaluator\Traits\EnumExtended;
+
 enum Suit: int
 {
+    use EnumExtended;
+
     case Hearts     = 41;
     case Diamonds   = 43;
     case Clubs      = 47;
