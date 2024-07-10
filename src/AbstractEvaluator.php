@@ -27,11 +27,23 @@ abstract class AbstractEvaluator implements HandEvaluator
     {
         $value = $hand->getRankValues();
 
-        if (array_key_exists($value, $this->rankedHands)) {
-            return $this->rankedHands[$value];
+        if (!array_key_exists($value, $this->rankedHands)) {
+            throw new \Exception("Invalid hand supplied to evaluator.");
         }
 
-        throw new \Exception("Invalid hand supplied to evaluator.");
+        return $this->rankedHands[$value];
+    }
+
+    /**
+     * Take an instance of a hand and its rank and return its full English name.
+     * @param Hand $hand
+     * @param int $rank
+     *
+     * @return string
+     */
+    protected function getName(Hand $hand, int $rank): string
+    {
+        throw new \Exception("Cannot determine the name of hand '" . $hand->toString() . "' and rank '" . $rank . "' because '" . get_called_class() . "' has not implemented a getName method");
     }
 
     /**
