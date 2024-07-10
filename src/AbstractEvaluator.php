@@ -2,14 +2,12 @@
 
 namespace Si2k63\PokerHandEvaluator;
 
-use Si2k63\PokerHandEvaluator\Enums\Rank;
-use Si2k63\PokerHandEvaluator\Enums\Suit;
 use Si2k63\PokerHandEvaluator\Interfaces\EvaluatorResult;
 use Si2k63\PokerHandEvaluator\Interfaces\HandEvaluator;
 
 abstract class AbstractEvaluator implements HandEvaluator
 {
-    private array $rankedHands = [];
+    protected array $rankedHands = [];
 
     public function addIterator(\Traversable $hands)
     {
