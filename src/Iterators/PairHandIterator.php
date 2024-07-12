@@ -12,20 +12,20 @@ class PairHandIterator implements \IteratorAggregate
     public function getIterator(): \Traversable
     {
         $ranks = Rank::cases();
-        for ($a = 0; $a < count($ranks); $a++) {
-            for ($b = 0; $b < count($ranks); $b++) {
-                for ($c = $b + 1; $c < count($ranks); $c++) {
-                    for ($d = $c + 1; $d < count($ranks); $d++) {
-                        if ($a == $b || $a == $c || $a == $d || $b == $d) {
+
+        foreach ($ranks as $primaryRank) {
+            foreach (Rank::excluding([$primaryRank]) as $secondaryIndex => $secondaryRank) {
+                foreach (Rank::slice($secondaryIndex + 1) as $tertiaryIndex => $tertiaryRank) {
+                    foreach (Rank::slice($tertiaryIndex + 1) as $quarternaryRank) {
+                        if (in_array($primaryRank, [$tertiaryRank, $quarternaryRank])) {
                             continue;
                         }
-
                         yield Hand::fromArray([
-                            new Card($ranks[$a], Suit::Diamonds),
-                            new Card($ranks[$a], Suit::Hearts),
-                            new Card($ranks[$b], Suit::Clubs),
-                            new Card($ranks[$c], Suit::Spades),
-                            new Card($ranks[$d], Suit::Diamonds),
+                            new Card($primaryRank, Suit::Diamonds),
+                            new Card($primaryRank, Suit::Hearts),
+                            new Card($secondaryRank, Suit::Clubs),
+                            new Card($tertiaryRank, Suit::Spades),
+                            new Card($quarternaryRank, Suit::Diamonds),
                         ]);
                     }
                 }
