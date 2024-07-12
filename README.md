@@ -1,5 +1,13 @@
 # PHP Texas Hold'em Hand Evaluator
 
+## Getting Started
+
+Simply install the package through composer using the command:
+
+```
+composer require si2k63/php-texas-hold-em-evaluator
+```
+
 ## Overview
 
 A surprisingly fast Texas Hold'em hand evaluator written in PHP. Draw cards from the deck factory class (or instantiate specific ones) and pass them to the evaluate class to determine their rank in the form of an integer or a full text description.
@@ -95,19 +103,19 @@ Compares two starting hands from Texas Hold'em and deals all possible boards to 
 
 The library is built on the principle that the multiplication of two prime numbers always results in a number that cannot be produced by multiplying any other two numbers.
 
-Each card's rank and suit are assigned a unique prime number in ascending order. Below is an overview of the ranks and suits and their associated prime numbers.
+Each card's rank and suit are assigned a unique prime number in ascending order.
 
 On initialisation the evaluation class enumerates through all 7462 possible groupings of poker hands from best to worst, calculating a unique identifier for each of them.
 
-e.g. A _ K _ Q _ J _ T = 14535931 (Ace High Straight)
+e.g. A \* K \* Q \* J \* T = 14535931 (Ace High Straight)
 
 Those unique identifiers are stored in a rankings array, with the unique identifier's position in the array being used as the basis for its rank. The unique id for A Royal Flush will be at position 0 in the array, while the unique id for 7 5 4 3 2 of differing suits (the worst possible 5 card combination) will be at the last position.
 
-In cases of hands containing cards that are all the same suit (e.g. straight flushes and flushes) the product is multiplied by the next available prime number (59) to ensure a unique number is produced.
+In cases of where a hand containing cards that are all the same suit (e.g. straight flushes and flushes) the product is multiplied by the next available prime number (59) to ensure a unique number is produced.
 
-e.g. A _ K _ Q _ J _ T \* 59 = 857619929 (A Royal Flush)
+e.g. A \* K \* Q \* J \* T \* 59 = 857619929 (A Royal Flush)
 
-This allows us to distinguish between flush and non-flush hands.
+This allows the evaluator to distinguish between flush and non-flush hands.
 
 Then, when a hand is passed to the class for evaluation, the unique identifier for all possible five card combinations of cards is calculated and checked against the rankings table to determine which has the highest rank.
 
