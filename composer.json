@@ -1,6 +1,7 @@
 {
     "name": "si2k63/php-texas-hold-em-evaluator",
     "description": "A composer library for evaluating poker hands",
+    "license": "MIT",
     "type": "library",
     "autoload": {
         "psr-4": {
